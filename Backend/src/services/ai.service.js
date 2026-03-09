@@ -1,7 +1,8 @@
 const { GoogleGenAI } = require("@google/genai")
 const { z } = require("zod")
 const { zodToJsonSchema } = require("zod-to-json-schema")
-const puppeteer = require("puppeteer")
+const puppeteer = require("puppeteer-core")
+const chromium = require("@sparticuz/chromium")
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GOOGLE_GENAI_API_KEY
@@ -88,14 +89,9 @@ Return strictly valid JSON following the provided schema.
 async function generatePdfFromHtml(htmlContent) {
 
   const browser = await puppeteer.launch({
-    headless: "new",
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu"
-    ],
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath()
+    args: chromium.args,
+    executablePath: await chromium.executablePath(),
+    headless: chromium.headless
   })
 
   const page = await browser.newPage()
@@ -104,13 +100,7 @@ async function generatePdfFromHtml(htmlContent) {
 
   const pdfBuffer = await page.pdf({
     format: "A4",
-    printBackground: true,
-    margin: {
-      top: "20mm",
-      bottom: "20mm",
-      left: "15mm",
-      right: "15mm"
-    }
+    printBackground: true
   })
 
   await browser.close()
