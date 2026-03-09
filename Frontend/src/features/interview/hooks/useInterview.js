@@ -91,36 +91,25 @@ export const useInterview = () => {
 }
  
 
-    const getResumePdf = async (interviewReportId) => {
+   const getResumePdf = async (interviewReportId) => {
 
-        setLoading(true)
+    setLoading(true)
 
-        try {
+    try {
 
-            const response = await generateResumePdf({ interviewReportId })
+        const response = await generateResumePdf({ interviewReportId })
 
-            const url = window.URL.createObjectURL(
-                new Blob([response], { type: "application/pdf" })
-            )
-
-            const link = document.createElement("a")
-
-            link.href = url
-            link.setAttribute("download", `resume_${interviewReportId}.pdf`)
-
-            document.body.appendChild(link)
-            link.click()
-
-        }
-        catch (error) {
-            console.log(error)
-        }
-        finally {
-            setLoading(false)
-        }
+        return response
 
     }
+    catch (error) {
+        console.log(error)
+    }
+    finally {
+        setLoading(false)
+    }
 
+}
     useEffect(() => {
 
         if (interviewId) {
