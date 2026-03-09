@@ -9,5 +9,5 @@ interviewRouter.post("/", authMiddleware.authUser, upload.single("resume"), inte
 interviewRouter.get("/report/:interviewId", authMiddleware.authUser, interviewController.getInterviewReportByIdController)
 interviewRouter.get("/", authMiddleware.authUser, interviewController.getAllInterviewReportsController)
 interviewRouter.post("/resume/pdf/:interviewReportId", authMiddleware.authUser, interviewController.generateResumePdfController)
-
+interviewRouter.delete("/:id", authMiddleware.authUser, interviewController.deleteInterviewReport)
 module.exports = interviewRouter

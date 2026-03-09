@@ -120,15 +120,27 @@ async function getInterviewReportByIdController(req, res) {
 
 async function getAllInterviewReportsController(req, res) {
 
-  const interviewReports = await interviewReportModel
-    .find({ user: req.user.id })
-    .sort({ createdAt: -1 })
-    .select("-resume -selfDescription -jobDescription -__v");
+  try {
 
-  res.status(200).json({
-    message: "Interview reports fetched successfully",
-    interviewReports
-  });
+    const interviewReports = await interviewReportModel
+      .find({ user: req.user.id })
+      .sort({ createdAt: -1 })
+      .select("-resume -selfDescription -jobDescription -__v")
+
+    res.status(200).json({
+      message: "Interview reports fetched successfully",
+      interviewReports
+    })
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: "Server error",
+      error: error.message
+    })
+
+  }
+
 }
 
 async function generateResumePdfController(req, res) {
@@ -159,9 +171,41 @@ async function generateResumePdfController(req, res) {
   res.send(pdfBuffer);
 }
 
+async function deleteInterviewReport(req, res) {
+
+  try {
+
+    const { id } = req.params
+
+    const report = await interviewReportModel.findOneAndDelete({
+      _id: id,
+      user: req.user.id
+    })
+
+    if (!report) {
+      return res.status(404).json({
+        message: "Report not found"
+      })
+    }
+
+    res.status(200).json({
+      message: "Report deleted successfully"
+    })
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: "Server error"
+    })
+
+  }
+
+}
+
 module.exports = {
   generateInterViewReportController,
   getInterviewReportByIdController,
   getAllInterviewReportsController,
-  generateResumePdfController
+  generateResumePdfController,
+  deleteInterviewReport
 };
