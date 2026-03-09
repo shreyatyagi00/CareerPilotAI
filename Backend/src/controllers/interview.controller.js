@@ -52,7 +52,7 @@ async function generateInterViewReportController(req, res) {
       severity: "medium"
     }));
 
-    const preparationPlan = preparationPlanRaw.map((p, index) => {
+    let preparationPlan = preparationPlanRaw.map((p, index) => {
 
   if (typeof p === "string") {
     return {
@@ -69,6 +69,18 @@ async function generateInterViewReportController(req, res) {
   }
 
 });
+
+if (preparationPlan.length === 0) {
+
+  preparationPlan = [
+    { day: 1, focus: "Review core concepts", tasks: ["Revise fundamentals", "Review job requirements"] },
+    { day: 2, focus: "Practice technical questions", tasks: ["Solve coding problems", "Practice interview questions"] },
+    { day: 3, focus: "Strengthen weak areas", tasks: ["Study missing skills", "Work on mini exercises"] },
+    { day: 4, focus: "Mock interview practice", tasks: ["Practice behavioral questions", "Explain projects clearly"] },
+    { day: 5, focus: "Final revision", tasks: ["Review notes", "Prepare final talking points"] }
+  ]
+
+}
 
     const interviewReport = await interviewReportModel.create({
       user: req.user.id,
