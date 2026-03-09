@@ -89,12 +89,21 @@ Return strictly valid JSON following the provided schema.
 async function generatePdfFromHtml(htmlContent) {
 
   const browser = await puppeteer.launch({
-    args: chromium.args,
-    executablePath: await chromium.executablePath(),
-    headless: chromium.headless
-  })
+  args: [
+    ...chromium.args,
+    "--no-sandbox",
+    "--disable-setuid-sandbox"
+  ],
+  executablePath: await chromium.executablePath(),
+  headless: true
+})
 
   const page = await browser.newPage()
+
+await page.setViewport({
+  width: 1280,
+  height: 800
+})
 
   await page.setContent(htmlContent, { waitUntil: "networkidle0" })
 
