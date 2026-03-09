@@ -52,11 +52,23 @@ async function generateInterViewReportController(req, res) {
       severity: "medium"
     }));
 
-    const preparationPlan = preparationPlanRaw.map((p, index) => ({
+    const preparationPlan = preparationPlanRaw.map((p, index) => {
+
+  if (typeof p === "string") {
+    return {
       day: index + 1,
       focus: p,
       tasks: [p]
-    }));
+    }
+  }
+
+  return {
+    day: p.day || index + 1,
+    focus: p.focus || "",
+    tasks: p.tasks || []
+  }
+
+});
 
     const interviewReport = await interviewReportModel.create({
       user: req.user.id,
