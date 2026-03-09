@@ -1,8 +1,8 @@
-import { getAllInterviewReports, generateInterviewReport, getInterviewReportById, generateResumePdf } from "../services/interview.api"
+import { getAllInterviewReports, generateInterviewReport, getInterviewReportById, generateResumePdf, deleteInterviewReport } from "../services/interview.api"
 import { useContext, useEffect } from "react"
 import { InterviewContext } from "../interview.context"
 import { useParams } from "react-router"
-
+import axios from "axios"
 
 export const useInterview = () => {
 
@@ -16,14 +16,18 @@ export const useInterview = () => {
     const { loading, setLoading, report, setReport, reports, setReports } = context
 
     const generateReport = async ({ jobDescription, selfDescription, resumeFile }) => {
+
         setLoading(true)
         let response = null
+
         try {
             response = await generateInterviewReport({ jobDescription, selfDescription, resumeFile })
             setReport(response.interviewReport)
-        } catch (error) {
+        }
+        catch (error) {
             console.log(error)
-        } finally {
+        }
+        finally {
             setLoading(false)
         }
 
@@ -31,61 +35,112 @@ export const useInterview = () => {
     }
 
     const getReportById = async (interviewId) => {
+
         setLoading(true)
         let response = null
+
         try {
             response = await getInterviewReportById(interviewId)
             setReport(response.interviewReport)
-        } catch (error) {
+        }
+        catch (error) {
             console.log(error)
-        } finally {
+        }
+        finally {
             setLoading(false)
         }
+
         return response.interviewReport
     }
 
     const getReports = async () => {
+
         setLoading(true)
         let response = null
+
         try {
             response = await getAllInterviewReports()
             setReports(response.interviewReports)
-        } catch (error) {
+        }
+        catch (error) {
             console.log(error)
-        } finally {
+        }
+        finally {
             setLoading(false)
         }
 
         return response.interviewReports
     }
 
+    const deleteReport = async (id) => {
+
+  try {
+
+    await deleteInterviewReport(id)
+
+    setReports(prev =>
+      prev.filter(report => report._id !== id)
+    )
+
+  } catch (error) {
+
+    console.log(error)
+
+  }
+
+}
+ 
+
     const getResumePdf = async (interviewReportId) => {
+
         setLoading(true)
-        let response = null
+
         try {
-            response = await generateResumePdf({ interviewReportId })
-            const url = window.URL.createObjectURL(new Blob([ response ], { type: "application/pdf" }))
+
+            const response = await generateResumePdf({ interviewReportId })
+
+            const url = window.URL.createObjectURL(
+                new Blob([response], { type: "application/pdf" })
+            )
+
             const link = document.createElement("a")
+
             link.href = url
             link.setAttribute("download", `resume_${interviewReportId}.pdf`)
+
             document.body.appendChild(link)
             link.click()
+
         }
         catch (error) {
             console.log(error)
-        } finally {
+        }
+        finally {
             setLoading(false)
         }
+
     }
 
     useEffect(() => {
+
         if (interviewId) {
             getReportById(interviewId)
-        } else {
+        }
+        else {
             getReports()
         }
-    }, [ interviewId ])
 
-    return { loading, report, reports, generateReport, getReportById, getReports, getResumePdf }
+    }, [interviewId])
+
+    return {
+  loading,
+  report,
+  reports,
+  generateReport,
+  getReportById,
+  getReports,
+  getResumePdf,
+  deleteReport
+}
 
 }

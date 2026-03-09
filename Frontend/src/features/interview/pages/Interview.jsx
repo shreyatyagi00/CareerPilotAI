@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import '../style/interview.scss'
 import { useInterview } from '../hooks/useInterview.js'
-import { useNavigate, useParams } from 'react-router'
-
-
+import { useNavigate, useParams } from "react-router-dom"
+import BackButton from "../../../components/BackButton";
+import useSwipeBackWithAnimation from "../../../hooks/useSwipeBackWithAnimation";
+import { useRef } from "react";
 
 const NAV_ITEMS = [
     { id: 'technical', label: 'Technical Questions', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>) },
@@ -39,25 +40,46 @@ const QuestionCard = ({ item, index }) => {
     )
 }
 
-const RoadMapDay = ({ day }) => (
-    <div className='roadmap-day'>
-        <div className='roadmap-day__header'>
-            <span className='roadmap-day__badge'>Day {day.day}</span>
-            <h3 className='roadmap-day__focus'>{day.focus}</h3>
-        </div>
-        <ul className='roadmap-day__tasks'>
-            {day.tasks.map((task, i) => (
-                <li key={i}>
-                    <span className='roadmap-day__bullet' />
-                    {task}
-                </li>
-            ))}
-        </ul>
+const RoadMapDay = ({ day }) => {
+
+  const tasks = day.tasks
+    ? day.tasks
+    : day.focus.split(".").filter(t => t.trim() !== "")
+
+  return (
+    <div className="roadmap-day">
+
+      <div className="roadmap-day__header">
+        <span className="roadmap-day__badge">
+          Day {day.day}
+        </span>
+
+        <h3 className="roadmap-day__focus">
+          {day.focus.split(".")[0]}
+        </h3>
+      </div>
+
+      <ul className="roadmap-day__tasks">
+        {tasks.map((task, i) => (
+          <li key={i}>
+            <span className="roadmap-day__bullet"></span>
+            {task.replace(`Day ${day.day}:`, "").trim()}
+          </li>
+        ))}
+      </ul>
+
     </div>
-)
+  )
+}
 
 // ── Main Component ────────────────────────────────────────────────────────────
 const Interview = () => {
+
+    const [leaving, setLeaving] = useState(false)
+
+   const navigate = useNavigate();
+  const pageRef = useRef(null);
+useSwipeBackWithAnimation("/", pageRef);
     const [ activeNav, setActiveNav ] = useState('technical')
     const { report, getReportById, loading, getResumePdf } = useInterview()
     const { interviewId } = useParams()
@@ -70,13 +92,23 @@ const Interview = () => {
 
 
 
-    if (loading || !report) {
-        return (
-            <main className='loading-screen'>
-                <h1>Loading your interview plan...</h1>
-            </main>
-        )
-    }
+   if (loading || !report || leaving) {
+  return (
+    <main className="loading-screen">
+
+      <div className="glass-loader">
+
+        <div className="spinner"></div>
+
+        <p className="loading-text">
+          {leaving ? "Returning to Dashboard..." : "Generating Interview Plan..."}
+        </p>
+
+      </div>
+
+    </main>
+  )
+}
 
     const scoreColor =
         report.matchScore >= 80 ? 'score--high' :
@@ -101,7 +133,19 @@ const matchText = getMatchText(score);
  
 
     return (
-        <div className='interview-page'>
+        <div className='interview-page' ref={pageRef}>
+                <BackButton
+  onClick={() => {
+
+    setLeaving(true)
+
+    setTimeout(() => {
+      navigate("/")
+    }, 700)
+
+  }}
+/>
+
             <div className='interview-layout'>
 
                 {/* ── Left Nav ── */}
@@ -195,11 +239,19 @@ const matchText = getMatchText(score);
                     <div className='skill-gaps'>
                         <p className='skill-gaps__label'>Skill Gaps</p>
                         <div className='skill-gaps__list'>
-                            {report.skillGaps.map((gap, i) => (
-                                <span key={i} className={`skill-tag skill-tag--${gap.severity}`}>
-                                    {gap.skill}
-                                </span>
-                            ))}
+                            {report.skillGaps.map((gap, i) => {
+
+  const shortSkill = gap.skill.split(":")[0];
+
+  return (
+    <span
+      key={i}
+      className={`skill-tag skill-tag--${gap.severity}`}
+    >
+      {shortSkill}
+    </span>
+  );
+})}
                         </div>
                     </div>
 

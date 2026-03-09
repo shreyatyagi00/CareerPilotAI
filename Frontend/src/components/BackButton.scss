@@ -1,0 +1,44 @@
+.back-button{
+  position: fixed;
+  top: 16px;
+  left: 24px;
+  z-index: 999;
+
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+
+  color: white;
+  font-size: 18px;
+
+  border: none;
+  cursor: pointer;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+
+  opacity: 0;
+  transform: translateX(-20px) scale(0.9);
+
+  transition: all 0.4s ease;
+}
+
+.back-button.show{
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.back-button:hover{
+  background: rgba(255,255,255,0.25);
+  transform: scale(1.1);
+}
+
+.back-button:active{
+  transform: scale(0.95);
+}
