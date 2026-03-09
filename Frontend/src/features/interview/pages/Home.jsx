@@ -27,12 +27,15 @@ const Home = () => {
     }
 
     if (loading) {
-        return (
-            <main className='loading-screen'>
-                <h1>Loading your interview plan...</h1>
-            </main>
-        )
-    }
+  return (
+    <main className="loading-screen">
+      <div className="glass-loader">
+        <div className="spinner"></div>
+        <p className="loading-text">Generating your AI interview plan...</p>
+      </div>
+    </main>
+  )
+}
 
 
 

@@ -546,3 +546,112 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
 .delete-btn:hover {
   background: #ff0055;
 }
+
+/* ── Loading Screen ───────────────────────── */
+
+.loading-screen{
+  width:100%;
+  height:100vh;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  background:linear-gradient(120deg,#071224,#0a1b3a);
+}
+
+
+/* glass card */
+
+.glass-loader{
+
+  padding:2.5rem 3rem;
+
+  border-radius:1rem;
+
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(25px);
+
+  border:1px solid rgba(255,255,255,0.15);
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:1rem;
+
+  position:relative;
+  overflow:hidden;
+}
+
+
+/* shine animation */
+
+.glass-loader::before{
+
+  content:"";
+  position:absolute;
+
+  top:-50%;
+  left:-50%;
+
+  width:200%;
+  height:200%;
+
+  background:linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.35),
+    transparent
+  );
+
+  transform:rotate(25deg);
+
+  animation:glassShine 3s linear infinite;
+
+}
+
+@keyframes glassShine{
+
+  0%{
+    transform:translateX(-100%) translateY(-100%) rotate(25deg);
+  }
+
+  100%{
+    transform:translateX(100%) translateY(100%) rotate(25deg);
+  }
+
+}
+
+
+/* spinner */
+
+.spinner{
+
+  width:40px;
+  height:40px;
+
+  border-radius:50%;
+
+  border:4px solid rgba(255,255,255,0.15);
+  border-top:4px solid #ff2d78;
+
+  animation:spin 1s linear infinite;
+
+}
+
+@keyframes spin{
+
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(360deg);}
+
+}
+
+
+/* loading text */
+
+.loading-text{
+
+  font-size:0.9rem;
+  color:#9aa4b2;
+
+}
