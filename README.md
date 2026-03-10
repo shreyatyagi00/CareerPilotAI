@@ -1,11 +1,11 @@
-**CareerPilotAI
+## CareerPilotAI
 
 CareerPilotAI is an AI-powered web application that analyzes a user's resume and generates an interview preparation report. The system evaluates skills, extracts resume insights, and provides guidance to help candidates prepare for job interviews more effectively.
 The platform uses AI + resume parsing + backend APIs to generate structured insights such as skill analysis, match scores, and preparation suggestions.
 
-____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+_____________________________________________________________________________________________________________________________
 
-**Features
+## Features
 
 -Resume Upload (PDF)
 -AI-powered Interview Report Generation
@@ -16,9 +16,9 @@ ________________________________________________________________________________
 -Fast Backend APIs using Express
 -Modern Frontend UI
 
-____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+_____________________________________________________________________________________________________________________________
 
-**Tech Stack
+## Tech Stack
 
 Frontend
 
@@ -42,3 +42,15 @@ Authentication
 
 -JWT (JSON Web Token)
 -bcrypt
+
+_____________________________________________________________________________________________________________________________
+
+## Deployed using:
+
+Frontend: Vercel  
+Backend: Render  
+Database: MongoDB Atlas
+
+_____________________________________________________________________________________________________________________________
+
+## Live Demo : https://career-pilot-ai-two.vercel.app/
